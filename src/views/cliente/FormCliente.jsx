@@ -2,11 +2,16 @@ import InputMask from 'comigo-tech-react-input-mask';
 import React from "react";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
+import { menuSistema } from "../menu/menuSistema"
+
+
 export default function FormCliente () {
 
     return (
 
         <div>
+
+            <menuSistema/>
 
             <div style={{marginTop: '3%'}}>
 
