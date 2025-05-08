@@ -1,5 +1,7 @@
+import axios from 'axios';
 import InputMask from 'comigo-tech-react-input-mask';
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
 
@@ -115,7 +117,7 @@ export default function FormCliente () {
                         </Form>
                         
                         <div style={{marginTop: '4%'}}>
-
+                        <Link to={'/list-cliente'}>
                             <Button
                                 type="button"
                                 inverted
@@ -127,7 +129,7 @@ export default function FormCliente () {
                                 <Icon name='reply' />
                                 Voltar
                             </Button>
-                                
+                        </Link>        
                             <Button
                                 inverted
                                 circular
