@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 
-export default function menuSistema(props) {
+export default function MenuSistema(props) {
     return (
     <>
         <Menu inverted>
