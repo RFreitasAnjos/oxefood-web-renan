@@ -1,6 +1,6 @@
 import axios from 'axios';
 import InputMask from 'comigo-tech-react-input-mask';
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
@@ -28,6 +28,16 @@ export default function formEntregador () {
         .catch((error) =>{
             console.log(`Erro ao incluir o cliente ${nome}`)
         })
+    }
+
+    function formatarData(dataParam) {
+
+    if (dataParam === null || dataParam === '' || dataParam === undefined) {
+        return ''
+    }
+
+    let arrayData = dataParam.split('-');
+    return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
     }
 
     return (
@@ -106,7 +116,7 @@ export default function formEntregador () {
                                         mask="99/99/9999" 
                                         maskChar={null}
                                         placeholder="Ex: 20/03/1985"
-                                        value={dataNascimento}
+                                        value={confirmarRemover(dataNascimento)}
                                         onChange={e=> setDataNascimento(e.target.value)}
                                     /> 
                                 </Form.Input>
