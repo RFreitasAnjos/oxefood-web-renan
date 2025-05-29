@@ -1,122 +1,153 @@
-import axios from 'axios';
+import axios from "axios";
 import InputMask from 'comigo-tech-react-input-mask';
-import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
+import MenuSistema from '../menu/MenuSistema';
 
-export default function formProduto () {
+export default function FormProduto () {
 
-    const [nome, setNome] = useState();
-    const [cpf,setCpf] = useState();
-    const [dataNascimento, setDataNascimento] = useState();
-    const [foneCelular, setFoneCelular] = useState();
-    const [foneFixo, setFoneFixo] = useState();
+    const {state} = useLocation();
+    const [idProduto, setIdProduto] = useState();
+
+    const [codigo, setCodigo] = useState('');
+    const [titulo, setTitulo] = useState('');
+    const [descricao,setDescricao] = useState('');
+    const [valor, setValor] = useState('');
+    const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState('');
+    const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState('');
+ 
+    useEffect(() => {
+        if(state != null && state.id != null){
+            axios.get("http://localhost:8080/api/produto/"+ state.id)
+            .then((response) => {
+                setIdProduto(response.data.id)
+                setCodigo(response.data.codigo)
+                setTitulo(response.data.titulo)
+                setDescricao(response.data.descricao)
+                setValor(response.data.valor ? response.data.valor.toString() : '')
+                setTempoEntregaMinimo(response.data.tempoEntregaMinimo)
+                setTempoEntregaMaximo(response.data.tempoEntregaMaximo)
+            })
+        }
+    },[state])
 
     function salvar() {
-        let clienteRequest ={
-            nome: nome,
-            cpf: cpf,
-            dataNascimento: dataNascimento,
-            foneCelular: foneCelular,
-            foneFio: foneFixo
+        let produtoRequest ={
+            codigo: codigo,
+            titulo: titulo,
+            descricao: descricao,
+            valor: parseFloat(valor.replace(',','.')),
+            tempoEntregaMinimo: parseInt(tempoEntregaMinimo),
+            tempoEntregaMaximo: parseInt(tempoEntregaMaximo),
         }
-
-        axios.post("http://localhost:8080/api/produto", clienteRequest)
-        .then((response) => {
-            console.log(`Cliente ${nome} cadastrado`)
-        })
-        .catch((error) =>{
-            console.log(`Erro ao incluir o cliente ${nome}`)
-        })
+        if ( idProduto != null) {
+            axios.put("http://localost:8080/api/produto/" + idProduto, produtoRequest)
+            .then((response) => {
+                alert('Produto Alterado com sucesso.')
+                console.log('Produto Alterado com sucesso.')
+            })
+            .catch((error) => {
+                alert('Erro ao alterar um produto.') 
+                console.log('Erro ao alterar um produto.')
+            })    
+        } else {
+            axios.post("http://localhost:8080/api/produto", produtoRequest)
+            .then((response) => {
+                alert(`produto ${titulo} cadastrado`)
+                console.log(`produto ${titulo} cadastrado`)
+            })
+            .catch((error) =>{
+                alert(`Erro ao incluir o produto ${titulo}`)
+                console.log(`Erro ao incluir o produto ${titulo}`)
+            })
+        }
     }
 
     return (
 
-        <div>
-
-            <menuSistema tela={'entregador'}/>
-
-            <div style={{marginTop: '3%'}}>
-
-                <Container textAlign='justified' >
-
-                    <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro </h2>
+<div>
+            <MenuSistema tela={'produto'} />
+            <div style={{ marginTop: '3%' }}>
+                <Container textAlign='justified'>
+                    { idProduto === undefined &&
+                        <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
+                    }
+                    { idProduto != undefined &&
+                        <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
+                    }
 
                     <Divider />
 
-                    <div style={{marginTop: '4%'}}>
-
+                    <div style={{ marginTop: '4%' }}>
                         <Form>
-
                             <Form.Group widths='equal'>
-
                                 <Form.Input
                                     required
                                     fluid
-                                    value={nome}
-                                    label='Nome'
+                                    label='Título'
+                                    placeholder="Informe o título do produto"
                                     maxLength="100"
-                                    onChange={e => setNome(e.target.value)}
+                                    value={titulo}
+                                    onChange={e => setTitulo(e.target.value)}
                                 />
 
                                 <Form.Input
                                     required
                                     fluid
-                                    label='CPF'>
-                                    <InputMask
-                                        required
-                                        mask="999.999.999-99"
-                                        value={cpf}
-                                        onChange={e => setCpf(e.target.value)}
-                                    /> 
-                                </Form.Input>
-
+                                    label='Código do produto'
+                                    placeholder='Informe o código do produto'
+                                    value={codigo}
+                                    onChange={e => setCodigo(e.target.value)}
+                                />
                             </Form.Group>
-                            
+
+                            <Form.Group widths='equal'>
+                                <Form.Input
+                                    fluid
+                                    label='Descrição'
+                                    placeholder='Informe a descrição do produto'
+                                    value={descricao}
+                                    onChange={e => setDescricao(e.target.value)}
+                                />
+                            </Form.Group>
+
                             <Form.Group>
-
                                 <Form.Input
+                                    required
                                     fluid
-                                    label='Fone Celular'
-                                    width={6}>
-                                    <InputMask 
-                                        mask="(99) 9999.9999"
-                                        value={foneCelular}
-                                        onChange={e => setFoneCelular(e.target.value)}
-                                    /> 
-                                </Form.Input>
-
-                                <Form.Input
-                                    fluid
-                                    label='Fone Fixo'
-                                    width={6}>
-                                    <InputMask 
-                                        mask="(99) 9999.9999"
-                                        value={foneFixo}
-                                        onChange={e => setFoneFixo(e.target.value)}
-                                    /> 
-                                </Form.Input>
-
-                                <Form.Input
-                                    fluid
-                                    label='Data Nascimento'
+                                    label='Valor Unitário'
                                     width={6}
                                 >
-                                    <InputMask 
-                                        mask="99/99/9999" 
-                                        maskChar={null}
-                                        placeholder="Ex: 20/03/1985"
-                                        value={dataNascimento}
-                                        onChange={e=> setDataNascimento(e.target.value)}
-                                    /> 
+                                    <InputMask
+                                        required
+                                        mask="9999,99"
+                                        value={valor || ''} 
+                                        onChange={e => setValor(e.target.value)}
+                                    />
                                 </Form.Input>
 
+                                <Form.Input
+                                    fluid
+                                    label='Tempo de Entrega Mínimo (min)'
+                                    placeholder='30'
+                                    width={6}
+                                    value={tempoEntregaMinimo}
+                                    onChange={e => setTempoEntregaMinimo(e.target.value)}
+                                />
+
+                                <Form.Input
+                                    fluid
+                                    label='Tempo de Entrega Máximo (min)'
+                                    placeholder='40'
+                                    width={6}
+                                    value={tempoEntregaMaximo}
+                                    onChange={e => setTempoEntregaMaximo(e.target.value)}
+                                />
                             </Form.Group>
-                        
                         </Form>
-                        
-                        <div style={{marginTop: '4%'}}>
-                        <Link to={'/list-entregador'}>
+
+                        <div style={{ marginTop: '4%' }}>
                             <Button
                                 type="button"
                                 inverted
@@ -124,11 +155,12 @@ export default function formProduto () {
                                 icon
                                 labelPosition='left'
                                 color='orange'
+                                onClick={() => window.location.href = '/list-produto'}
                             >
                                 <Icon name='reply' />
-                                Voltar
+                                Listar
                             </Button>
-                        </Link>        
+
                             <Button
                                 inverted
                                 circular
@@ -136,19 +168,15 @@ export default function formProduto () {
                                 labelPosition='left'
                                 color='blue'
                                 floated='right'
-                                onClick={() => salvar()}
+                                onClick={salvar}
                             >
                                 <Icon name='save' />
                                 Salvar
                             </Button>
-
                         </div>
-
                     </div>
-                    
                 </Container>
             </div>
         </div>
-
     );
 }

@@ -7,7 +7,7 @@ import MenuSistema from '../menu/MenuSistema';
 export default function ListCliente () {
 
    const [lista, setLista] = useState([]);
-   const [openModel, setOpenModal] = useState(false);
+   const [openModal, setOpenModal] = useState(false);
    const [idRemover, setIdRemover] = useState();
 
    useEffect(() => {
