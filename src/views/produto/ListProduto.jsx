@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Icon, Table } from 'semantic-ui-react';
 import MenuSistema from '../menu/MenuSistema';
@@ -53,25 +53,28 @@ export default function ListProduto () {
 
                       <Table.Header>
                           <Table.Row>
-                              <Table.HeaderCell>Produto</Table.HeaderCell>
-                              <Table.HeaderCell>Codigo</Table.HeaderCell>
-                              <Table.HeaderCell>Data validade</Table.HeaderCell>
-                              {/*<Table.HeaderCell>Fone Celular</Table.HeaderCell>*/}
-                              {/*<Table.HeaderCell>Fone Fixo</Table.HeaderCell>*/}
-                              <Table.HeaderCell textAlign='center'>Ações</Table.HeaderCell>
+                              <Table.HeaderCell>Código</Table.HeaderCell>
+                              <Table.HeaderCell>Categoria</Table.HeaderCell>
+                              <Table.HeaderCell>Título</Table.HeaderCell>
+                              <Table.HeaderCell>Descrição</Table.HeaderCell>
+                              <Table.HeaderCell>Valor Unitário</Table.HeaderCell>
+                              <Table.HeaderCell>Tempo Mínimo de Entrega</Table.HeaderCell>
+                              <Table.HeaderCell>Tempo Máximo de Entrega</Table.HeaderCell>
+                              <Table.HeaderCell textAlign='center' width={2}>Ações</Table.HeaderCell>
                           </Table.Row>
                       </Table.Header>
                  
                       <Table.Body>
+                        {this.state.listaProdutos.map(p => {
 
-                          { lista.map(Produto => (
-
-                              <Table.Row key={Produto.id}>
-                                  <Table.Cell>{Produto.nome}</Table.Cell>
-                                  <Table.Cell>{Produto.cpf}</Table.Cell>
-                                  <Table.Cell>{formatarData(Produto.dataNascimento)}</Table.Cell>
-                                  <Table.Cell>{Produto.foneCelular}</Table.Cell>
-                                  <Table.Cell>{Produto.foneFixo}</Table.Cell>
+                              <Table.Row key={p.id}>
+                                  <Table.Cell>{p.codigo}</Table.Cell>
+                                  <Table.Cell>{p.categoria.descricao}</Table.Cell>
+                                  <Table.Cell>{p.titulo}</Table.Cell>
+                                  <Table.Cell>{p.descricao}</Table.Cell>
+                                  <Table.Cell>{p.valorUnitario}</Table.Cell>
+                                  <Table.Cell>{p.tempoEntregaMinimo}</Table.Cell>
+                                  <Table.Cell>{p.tempoEntregaMaximo}</Table.Cell>
                                   <Table.Cell textAlign='center'>
 
                                       <Button
@@ -93,8 +96,7 @@ export default function ListProduto () {
 
                                        </Table.Cell>
                                    </Table.Row>
-                               ))}
-
+                            })}
                            </Table.Body>
                        </Table>
                    </div>
