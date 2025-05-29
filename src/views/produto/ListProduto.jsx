@@ -66,8 +66,7 @@ export default function ListProduto () {
                  
                       <Table.Body>
                         {this.state.listaProdutos.map(p => {
-
-                              <Table.Row key={p.id}>
+                                  <Table.Row key={p.id}>
                                   <Table.Cell>{p.codigo}</Table.Cell>
                                   <Table.Cell>{p.categoria.descricao}</Table.Cell>
                                   <Table.Cell>{p.titulo}</Table.Cell>
