@@ -1,57 +1,43 @@
-import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
+import { carregarClientes, formatarData, removerCliente } from '../../Controller/cliente/ControllerCliente';
 import MenuSistema from '../menu/MenuSistema';
 
 export default function ListCliente () {
 
-   const [lista, setLista] = useState([]);
-   const [openModal, setOpenModal] = useState(false);
-   const [idRemover, setIdRemover] = useState();
+    const [lista, setLista] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [idRemover, setIdRemover] = useState();
 
    useEffect(() => {
        carregarLista();
-   }, [])
+   }, []);
 
-   function carregarLista() {
-
-       axios.get("http://localhost:8080/api/cliente")
-       .then((response) => {
-           setLista(response.data)
-       })
-   }
-   function formatarData(dataParam) {
-
-    if (dataParam === null || dataParam === '' || dataParam === undefined) {
-        return ''
-    }
-
-    let arrayData = dataParam.split('-');
-    return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
-    }
-
-    function confirmaRemover(id) {
-       setOpenModal(true)
-       setIdRemover(id)
+   const carregarLista = async () => {
+        try{
+            const clientes = await carregarClientes();
+            setLista(clientes);
+        }   catch ( error ) {
+            alert("Erro ao carregar lista");
+            console.error("Erro ao carregar lista:", error);
+        }
    }
 
-   async function remover() {
+   const confirmarRemocao = (id) => {
+        setIdRemover(id);
+        setOpenModal(true);
+   }
 
-       await axios.delete('http://localhost:8080/api/cliente/' + idRemover)
-       .then((response) => {
- 
-           console.log('Cliente removido com sucesso.')
- 
-           axios.get("http://localhost:8080/api/cliente")
-           .then((response) => {
-               setLista(response.data)
-           })
-       })
-       .catch((error) => {
-           console.log('Erro ao remover um cliente.')
-       })
-       setOpenModal(false)
+   const remover = async () => {
+        try{
+            const novaLista = await removerCliente(idRemover);
+            setLista(novaLista);
+            setOpenModal(false);
+        } catch ( error ) {
+            alert("Erro ao remover cliente");
+            console.error("Erro ao remover: ", error);
+        }
    }
 
 return(
@@ -117,7 +103,7 @@ return(
                                                color='red'
                                                title='Clique aqui para remover este cliente'
                                                icon
-                                               onClick={e => confirmaRemover(cliente.id)}>
+                                               onClick={e => confirmarRemocao(cliente.id)}>
                                                    <Icon name='trash' />
                                            </Button>
 
