@@ -3,12 +3,13 @@ import InputMask from 'comigo-tech-react-input-mask';
 import { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
-
+import { salvarCliente } from '../../Controller/cliente/ControllerCliente';
 
 export default function FormCliente () {
 
     const { state } = useLocation();
     const { idCliente, setIdCliente } = useState();
+    const { cpfTocado, setCpfTocado} = useState(false);
 
     const [nome, setNome] = useState();
     const [cpf,setCpf] = useState();
@@ -31,34 +32,38 @@ export default function FormCliente () {
    	}, [state])
 
     function formatarData(dataParam) {
-
-    if (dataParam === null || dataParam === '' || dataParam === undefined) {
-        return ''
-    }
-
-    let arrayData = dataParam.split('-');
-    return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
-    }
-
-    function salvar() {
-        let clienteRequest ={
-            nome: nome,
-            cpf: cpf,
-            dataNascimento: dataNascimento,
-            foneCelular: foneCelular,
-            foneFio: foneFixo
+        if (dataParam === null || dataParam === '' || dataParam === undefined) {
+            return ''
         }
 
-        if (idCliente != null) { //Alteração:
-           axios.put("http://localhost:8080/api/cliente/" + idCliente, clienteRequest)
-           .then((response) => { console.log('Cliente alterado com sucesso.') })
-           .catch((error) => { console.log('Erro ao alter um cliente.') })
-       } else { //Cadastro:
-           axios.post("http://localhost:8080/api/cliente", clienteRequest)
-           .then((response) => { console.log('Cliente cadastrado com sucesso.') })
-           .catch((error) => { console.log('Erro ao incluir o cliente.') })
-       }
+        let arrayData = dataParam.split('-');
+        return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
     }
+
+const salvar = async () => {
+
+    if(!nome || nome.trim() === '')
+        return alert('O nome é obrigatório');
+    if(nome.trim().length < 3)
+        return alert('O nome deve ter pelo menos 3 letras');
+    if(cpf.trim().length < 14){
+        return alert('O CPF está inválido')
+    }
+    let clienteRequest ={
+        nome: nome,
+        cpf: cpf,
+        dataNascimento: dataNascimento,
+        foneCelular: foneCelular,
+        foneFixo: foneFixo
+    }
+    try{
+        await salvarCliente(clienteRequest)
+        alert('Cliente salvo com sucesso');
+        window.location.href = '/list-cliente';
+    } catch ( error ) {
+        alert('Erro ao salvar cliente');    
+    }
+}  
 
     return (
 
@@ -98,13 +103,16 @@ export default function FormCliente () {
                                 <Form.Input
                                     required
                                     fluid
-                                    label='CPF'>
+                                    label='CPF'
+                                    >
                                     <InputMask
                                         required
                                         mask="999.999.999-99"
                                         value={cpf}
-                                        onChange={e => setCpf(e.target.value)}
-                                    /> 
+                                        onChange={(e) => {
+                                            setCpf(e.target.value);
+                                    }}         
+                                    />
                                 </Form.Input>
 
                             </Form.Group>
@@ -116,7 +124,7 @@ export default function FormCliente () {
                                     label='Fone Celular'
                                     width={6}>
                                     <InputMask 
-                                        mask="(99) 9999.9999"
+                                        mask="(99) 9 9999.9999"
                                         value={foneCelular}
                                         onChange={e => setFoneCelular(e.target.value)}
                                     /> 
@@ -172,8 +180,8 @@ export default function FormCliente () {
                                 labelPosition='left'
                                 color='blue'
                                 floated='right'
-                                onClick={() => salvar()}
-                            >
+                                onClick={() => salvar(idCliente)}
+                                >
                                 <Icon name='save' />
                                 Salvar
                             </Button>
