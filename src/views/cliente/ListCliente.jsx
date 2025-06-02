@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
-import { carregarClientes, formatarData, removerCliente } from '../../Controller/cliente/ControllerCliente';
+import { carregarClientes, removerCliente } from '../../Controller/cliente/ControllerCliente';
+import { formatarData } from "../../utils/utils";
 import MenuSistema from '../menu/MenuSistema';
 
 export default function ListCliente () {
