@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import { salvarCliente } from '../../Controller/cliente/ControllerCliente';
+import { formatarData } from '../../utils/utils';
 
 export default function FormCliente () {
 
@@ -31,24 +32,7 @@ export default function FormCliente () {
        		}
    	}, [state])
 
-    function formatarData(dataParam) {
-        if (dataParam === null || dataParam === '' || dataParam === undefined) {
-            return ''
-        }
-
-        let arrayData = dataParam.split('-');
-        return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
-    }
-
 const salvar = async () => {
-
-    if(!nome || nome.trim() === '')
-        return alert('O nome é obrigatório');
-    if(nome.trim().length < 3)
-        return alert('O nome deve ter pelo menos 3 letras');
-    if(cpf.trim().length < 14){
-        return alert('O CPF está inválido')
-    }
     let clienteRequest ={
         nome: nome,
         cpf: cpf,
