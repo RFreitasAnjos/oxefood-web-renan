@@ -13,7 +13,7 @@ export default function FormProduto () {
     const [codigo, setCodigo] = useState('');
     const [titulo, setTitulo] = useState('');
     const [descricao,setDescricao] = useState('');
-    const [valor, setValor] = useState('');
+    const [valorUnitario, setValorUnitario] = useState('');
     const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState('');
     const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState('');
     const [listaCategoria, setListaCategoria] = useState([]);
@@ -27,14 +27,15 @@ export default function FormProduto () {
                 setCodigo(response.data.codigo)
                 setTitulo(response.data.titulo)
                 setDescricao(response.data.descricao)
-                setValor(response.data.valor ? response.data.valor.toString() : '')
+                setValorUnitario(response.data.valorUnitario ? response.data.valorUnitario.toString() : '')
                 setTempoEntregaMinimo(response.data.tempoEntregaMinimo)
                 setTempoEntregaMaximo(response.data.tempoEntregaMaximo)
+                setIdCategoria(response.data.idCategoria)
             })
         }
 
         axios.get("http://localhost:8080/api/categoriaproduto")
-        .than((response) => {
+        .then((response) => {
             const dropDownCategorias = response.data.map( c => ({ text: c.descricao, value: c.id}));
             setListaCategoria(dropDownCategorias);
         })
@@ -46,7 +47,7 @@ export default function FormProduto () {
             codigo: codigo,
             titulo: titulo,
             descricao: descricao,
-            valor: parseFloat(valor.replace(',','.')),
+            valorUnitario: parseFloat(valorUnitario.replace(',','.')),
             tempoEntregaMinimo: parseInt(tempoEntregaMinimo),
             tempoEntregaMaximo: parseInt(tempoEntregaMaximo),
         }
@@ -94,20 +95,20 @@ export default function FormProduto () {
                                 <Form.Input
                                     required
                                     fluid
+                                    label='Código do produto'
+                                    placeholder='Informe o código do produto'
+                                    value={codigo}
+                                    onChange={e => setCodigo(e.target.value)}
+                                />
+                                
+                                <Form.Input
+                                    required
+                                    fluid
                                     label='Título'
                                     placeholder="Informe o título do produto"
                                     maxLength="100"
                                     value={titulo}
                                     onChange={e => setTitulo(e.target.value)}
-                                />
-
-                                <Form.Input
-                                    required
-                                    fluid
-                                    label='Código do produto'
-                                    placeholder='Informe o código do produto'
-                                    value={codigo}
-                                    onChange={e => setCodigo(e.target.value)}
                                 />
                             </Form.Group>
 
@@ -121,7 +122,7 @@ export default function FormProduto () {
                                 />
                             </Form.Group>
 
-                            <Form.Group>
+                            <Form.Group widths='equal'>
                                 <Form.Select
                                     required
                                     fluid
@@ -146,8 +147,8 @@ export default function FormProduto () {
                                     <InputMask
                                         required
                                         mask="9999,99"
-                                        value={valor || ''} 
-                                        onChange={e => setValor(e.target.value)}
+                                        value={valorUnitario || ''} 
+                                        onChange={e => setValorUnitario(e.target.value)}
                                     />
                                 </Form.Input>
 

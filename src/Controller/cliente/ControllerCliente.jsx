@@ -27,8 +27,7 @@ export async function carregarClientes() {
         throw error;
     }
    }
-
-   
+ 
 export async function salvarCliente(clienteRequest) {
     try{
         axios.post(API_URL, clienteRequest);

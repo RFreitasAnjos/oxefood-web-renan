@@ -29,6 +29,17 @@ export default function ListProduto () {
         setOpenModal(true);
    }
 
+   const remover = async () => {
+        try{
+            const novaLista = await removerProduto(idRemover);
+            setLista(novaLista);
+            setOpenModal(false);
+        } catch ( error ){
+            alert("Erro ao remover produto")
+            console.log("Erro ao remover produto: ", error)
+        }
+   }
+
    return(
     <div>
         <MenuSistema tela={'produto'} />
@@ -76,7 +87,7 @@ export default function ListProduto () {
                       </Table.Header>
                  
                       <Table.Body>
-                        {lista.map(p => {
+                        {lista.map(p => (
                                   <Table.Row key={p.id}>
                                   <Table.Cell>{p.codigo}</Table.Cell>
                                   <Table.Cell>{p.categoria.descricao}</Table.Cell>
@@ -100,13 +111,14 @@ export default function ListProduto () {
                                                circular
                                                color='red'
                                                title='Clique aqui para remover este cliente'
-                                               icon>
+                                               icon
+                                               onClick={e => confirmarRemocao(p.id)}>
                                                    <Icon name='trash' />
                                            </Button>
 
                                        </Table.Cell>
                                    </Table.Row>
-                            })}
+                            ))}
                            </Table.Body>
                        </Table>
                    </div>
@@ -126,7 +138,7 @@ export default function ListProduto () {
                 <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
                     <Icon name='remove' /> Não
                 </Button>
-                <Button color='green' inverted onClick={() => removerProduto()}>
+                <Button color='green' inverted onClick={() => remover()}>
                     <Icon name='checkmark' /> Sim
                 </Button>
             </Modal.Actions>

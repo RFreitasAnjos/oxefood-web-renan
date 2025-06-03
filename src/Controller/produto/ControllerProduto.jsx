@@ -2,17 +2,18 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/produto';
 
-export async function removerProduto(id) {
+export async function removerProduto(idProduto) {
+    console.log(idProduto)
     try{
-        await axios.delete(`${API_URL}/${id}`);
+        await axios.delete(`${API_URL}/${idProduto}`);
         // alert('Cliente removido com sucesso');
         // console.log('Cliente removido com sucesso');
-
         const response = await axios.get(API_URL);
+        console.log(idProduto)
         return response.data;
     } catch ( error ) {
         // alert('Erro ao remover cliente');
-        // console.error('Erro ao remover cliente: ', error);
+        console.error('Erro ao remover cliente: ', error);
         throw error;
     }
    }
