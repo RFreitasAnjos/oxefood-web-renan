@@ -28,6 +28,7 @@ export async function carregarClientes() {
     }
    }
 
+   
 export async function salvarCliente(clienteRequest) {
     try{
         axios.post(API_URL, clienteRequest);
@@ -49,7 +50,7 @@ export async function salvarCliente(clienteRequest) {
 
 export async function alterarCliente(idCliente){
     try{
-        axios.post(`API_URL/${idCliente}`)
+        axios.post(`${API_URL}/${idCliente}`)
     } catch ( error ) {
         console.error("Erro: ",error)
     }
