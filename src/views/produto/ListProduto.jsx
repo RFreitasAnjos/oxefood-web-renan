@@ -1,35 +1,37 @@
-import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Container, Divider, Icon, Table } from 'semantic-ui-react';
+import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
+import { carregarProduto, removerProduto } from "../../Controller/produto/ControllerProduto";
 import MenuSistema from '../menu/MenuSistema';
 
 export default function ListProduto () {
 
-   const [lista, setLista] = useState([]);
+    const [lista, setLista] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [idRemover, setIdRemover] = useState();
 
    useEffect(() => {
        carregarLista();
    }, [])
 
-   function carregarLista() {
-
-       axios.get("http://localhost:8080/api/produto")
-       .then((response) => {
-           setLista(response.data)
-       })
+   const carregarLista = async () => {
+        try{
+            const produtos = await carregarProduto()
+            setLista(produtos)
+        } catch ( error ) {
+            alert("Erro ao carregar os produtos");
+            console.error("Erro ao carregar os produtos: ", error);
+        } 
    }
-   function formatarData(dataParam) {
 
-    if (dataParam === null || dataParam === '' || dataParam === undefined) {
-        return ''
-    }
+   const confirmarRemocao = (id) => {
+        setIdRemover(id);
+        setOpenModal(true);
+   }
 
-    let arrayData = dataParam.split('-');
-    return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
-}return(
+   return(
     <div>
-        <MenuSistema tela={'cliente'} />
+        <MenuSistema tela={'produto'} />
         <div style={{marginTop: '3%'}}>
 
             <Container textAlign='justified' >
@@ -65,7 +67,7 @@ export default function ListProduto () {
                       </Table.Header>
                  
                       <Table.Body>
-                        {this.state.listaProdutos.map(p => {
+                        {lista.map(p => {
                                   <Table.Row key={p.id}>
                                   <Table.Cell>{p.codigo}</Table.Cell>
                                   <Table.Cell>{p.categoria.descricao}</Table.Cell>
@@ -101,7 +103,25 @@ export default function ListProduto () {
                    </div>
                </Container>
            </div>
-
+        <Modal
+            basic
+            onClose={() => setOpenModal(false)}
+            onOpen={() => setOpenModal(true)}
+            open={openModal}
+        >
+            <Header icon>
+                <Icon name='trash' />
+                <div style={{marginTop: '5%'}}> Tem certeza que deseja remover esse registro? </div>
+            </Header>
+            <Modal.Actions>
+                <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
+                    <Icon name='remove' /> Não
+                </Button>
+                <Button color='green' inverted onClick={() => removerProduto()}>
+                    <Icon name='checkmark' /> Sim
+                </Button>
+            </Modal.Actions>
+        </Modal>
        </div>
    )
 }
