@@ -3,20 +3,24 @@ import InputMask from 'comigo-tech-react-input-mask';
 import { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
+import { FormEndereco } from '../../components/FormEndereco';
 import { salvarCliente } from '../../Controller/cliente/ControllerCliente';
 import { formatarData } from '../../utils/utils';
 
 export default function FormCliente () {
 
     const { state } = useLocation();
-    const { idCliente, setIdCliente } = useState();
-    const { cpfTocado, setCpfTocado} = useState(false);
+    const[idCliente, setIdCliente] = useState();
+    //const[cpfTocado, setCpfTocado] = useState(false);
+    const[mostraForm, setMostraForm] = useState(false);
 
     const [nome, setNome] = useState();
     const [cpf,setCpf] = useState();
     const [dataNascimento, setDataNascimento] = useState();
     const [foneCelular, setFoneCelular] = useState();
     const [foneFixo, setFoneFixo] = useState();
+    const[enderecos, setEnderecos] = useState();
+
 
     useEffect(() => {
        		if (state != null && state.id != null) {
@@ -48,6 +52,11 @@ const salvar = async () => {
         alert('Erro ao salvar cliente');    
     }
 }  
+
+const adicionarEndereco = (novoEndereco) => {
+    setEnderecos([...enderecos, novoEndereco]);
+    setMostraForm(false);
+}
 
     return (
 
@@ -139,6 +148,16 @@ const salvar = async () => {
                                     /> 
                                 </Form.Input>
 
+                            </Form.Group>
+
+                            <Form.Group>
+                                
+                            </Form.Group>
+                            
+                            <Form.Group widths={'equal'}>
+                                {idCliente != undefined && (
+                                    <FormEndereco onSave={adicionarEndereco} onCancel={() => setMostraForm(false)} />
+                                )}
                             </Form.Group>
                         
                         </Form>
