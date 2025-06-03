@@ -49,6 +49,15 @@ export default function ListProduto () {
                         as={Link}
                         to='/form-produto'
                     />
+                    <Button
+                        label='Nova Categoria'
+                        circular
+                        color='blue'
+                        icon='clipboard'
+                        floated='left'
+                        as={Link}
+                        to='/list-categoria'
+                    />
 <br/><br/><br/>
                   
                   <Table color='orange' sortable celled>
