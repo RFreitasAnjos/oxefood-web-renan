@@ -49,8 +49,29 @@ export async function salvarCliente(clienteRequest) {
 
 export async function alterarCliente(idCliente){
     try{
-        axios.post(`${API_URL}/${idCliente}`)
+        const response = await axios.post(`${API_URL}/${idCliente}`)
+        return response;
     } catch ( error ) {
         console.error("Erro: ",error)
+    }
+}
+
+export async function adicionarEndereco(endereco,idCliente){
+    console.log(endereco,idCliente)
+    try{
+        const response = await axios.post(`${API_URL}/endereco/${idCliente}`,endereco)
+        return response.status
+    } catch ( error ) {
+        console.log("Error: ", error);
+    }
+}
+
+export async function removerEndereco ( endereco, idCliente ){ 
+    console.log(endereco, idCliente)
+    try{
+        const response = await axios.delete(`${API_URL}/endereco/${idCliente}`);
+        return response.status;
+    } catch ( error ) {
+        console.log("Error: ", error);
     }
 }
