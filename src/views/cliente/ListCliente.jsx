@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
+import { DetalhesEndereco } from "../../components/DetalhesEndereco";
 import { carregarClientes, removerCliente } from '../../Controller/cliente/ControllerCliente';
 import { formatarData } from "../../utils/utils";
 import MenuSistema from '../menu/MenuSistema';
@@ -10,6 +11,10 @@ export default function ListCliente () {
     const [lista, setLista] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [idRemover, setIdRemover] = useState();
+    const [enderecoCliente, setEnderecoCliente] = useState();
+    const [mostrarEndereco, setMostrarEndereco] = useState(false);
+    const [clienteSelecionados, setClienteSelecionados] = useState();
+    const [openModalEndereco, setOpenModalEndereco] = useState(false);
 
    useEffect(() => {
        carregarLista();
@@ -38,6 +43,30 @@ export default function ListCliente () {
         } catch ( error ) {
             alert("Erro ao remover cliente");
             console.error("Erro ao remover: ", error);
+        }
+   }
+
+   const mostrarEnderecos = (id) => {
+        const clienteSelecionado = lista.find(c => c.id === id);    
+    if( clienteSelecionado ){
+        setEnderecoCliente(clienteSelecionado.enderecos || [])
+        setMostrarEndereco(true);
+    }   
+   }
+
+   const confirmarRemocaoEndereco = (id) => {
+        setIdRemover(id);
+        setOpenModalEndereco(true);
+   }
+
+   const removerEndereco = async () => {
+        try{
+            const novaLista = await removerEndereco(idRemover);
+            setLista(novaLista);
+            setOpenModalEndereco(false);
+        } catch ( error ) {
+            alert("Erro ao remover endereco");
+            console.log("Erro ao remover: ", error)
         }
    }
 
@@ -78,6 +107,7 @@ return(
                  
                       <Table.Body>
 
+
                           { lista.map(cliente => (
 
                               <Table.Row key={cliente.id}>
@@ -86,18 +116,28 @@ return(
                                   <Table.Cell>{formatarData(cliente.dataNascimento)}</Table.Cell>
                                   <Table.Cell>{cliente.foneCelular}</Table.Cell>
                                   <Table.Cell>{cliente.foneFixo}</Table.Cell>
-                                  <Table.Cell textAlign='center'>
-
-                                      <Button
-                                          inverted
-                                          circular
-                                          color='green'
-                                          title='Clique aqui para editar os dados deste cliente'
-                                          icon>
-                                            <Link to="/form-cliente" state={{id:cliente.id}} style={{color:'green'}}>
+                                  <Table.Cell width={3} textAlign='center'>
+                                    
+                                    <Button
+                                        inverted
+                                        circular
+                                        color="yellow"
+                                        title='Clique para visualizar os enderecos adicionados'
+                                        icon
+                                        onClick={() => mostrarEnderecos(cliente.id)}>        
+                                        <Icon name="dropdown"/>        
+                                    </Button>
+                                
+                                      <Link to="/form-cliente" state={{id:cliente.id}} style={{color:'green'}}>
+                                            <Button
+                                            inverted
+                                            circular
+                                            color='green'
+                                            title='Clique aqui para editar os dados deste cliente'
+                                            icon>
                                                <Icon name='edit' />
-                                            </Link>
-                                      </Button> &nbsp;
+                                            </Button> &nbsp;
+                                        </Link>
                                       <Button
                                                inverted
                                                circular
@@ -112,30 +152,44 @@ return(
                                    </Table.Row>
                                ))}
 
+
+
                            </Table.Body>
                        </Table>
                    </div>
                </Container>
+               <div>
+                 <Container>
+                    <div>
+                        { mostrarEndereco &&(
+                            <DetalhesEndereco enderecos={enderecoCliente}>
+                               
+                            </DetalhesEndereco>
+                        )}
+                    </div>
+                 </Container>
+               </div>
            </div>
-           <Modal
-               basic
-               onClose={() => setOpenModal(false)}
-               onOpen={() => setOpenModal(true)}
-               open={openModal}
-         >
-               <Header icon>
-                   <Icon name='trash' />
-                   <div style={{marginTop: '5%'}}> Tem certeza que deseja remover esse registro? </div>
-               </Header>
-               <Modal.Actions>
-                   <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
-                       <Icon name='remove' /> Não
-                   </Button>
-                   <Button color='green' inverted onClick={() => remover()}>
-                       <Icon name='checkmark' /> Sim
-                   </Button>
-               </Modal.Actions>
-         </Modal>
-       </div>
+                <Modal
+                    basic
+                    onClose={() => setOpenModal(false)}
+                    onOpen={() => setOpenModal(true)}
+                    open={openModal}
+                >
+                <Header icon>
+                    <Icon name='trash' />
+                    <div style={{marginTop: '5%'}}> Tem certeza que deseja remover esse registro? </div>
+                </Header>
+                <Modal.Actions>
+                    <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
+                        <Icon name='remove' /> Não
+                    </Button>
+                    <Button color='green' inverted onClick={() => remover()}>
+                        <Icon name='checkmark' /> Sim
+                    </Button>
+                </Modal.Actions>
+                </Modal>
+          
+            </div>
    )
 }
