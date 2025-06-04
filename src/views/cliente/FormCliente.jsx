@@ -19,7 +19,7 @@ export default function FormCliente () {
     const [dataNascimento, setDataNascimento] = useState();
     const [foneCelular, setFoneCelular] = useState();
     const [foneFixo, setFoneFixo] = useState();
-    const[enderecos, setEnderecos] = useState();
+    //const[enderecos, setEnderecos] = useState();
 
 
     useEffect(() => {
@@ -53,10 +53,10 @@ const salvar = async () => {
     }
 }  
 
-const adicionarEndereco = (novoEndereco) => {
-    setEnderecos([...enderecos, novoEndereco]);
-    setMostraForm(false);
-}
+// const adicionarEndereco = (novoEndereco) => {
+//     setEnderecos([...enderecos, novoEndereco]);
+//     setMostraForm(false);
+// }
 
     return (
 
@@ -156,7 +156,7 @@ const adicionarEndereco = (novoEndereco) => {
                             
                             <Form.Group widths={'equal'}>
                                 {idCliente != undefined && (
-                                    <FormEndereco onSave={adicionarEndereco} onCancel={() => setMostraForm(false)} />
+                                    <FormEndereco idCliente={idCliente} />
                                 )}
                             </Form.Group>
                         
