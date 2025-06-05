@@ -66,10 +66,10 @@ export async function adicionarEndereco(endereco,idCliente){
     }
 }
 
-export async function removerEndereco ( endereco, idCliente ){ 
-    console.log(endereco, idCliente)
+export async function removerEndereco (enderecoId){ 
+    console.log(enderecoId)
     try{
-        const response = await axios.delete(`${API_URL}/endereco/${idCliente}`);
+        const response = await axios.delete(`${API_URL}/endereco/${enderecoId}`);
         return response.status;
     } catch ( error ) {
         console.log("Error: ", error);
