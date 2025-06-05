@@ -1,21 +1,17 @@
 import InputMask from "comigo-tech-react-input-mask/lib/react-input-mask.development";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Dropdown, Form } from "semantic-ui-react";
+import { Button, Dropdown, Form } from "semantic-ui-react";
 import { estados } from "../constants/Estados";
 import { adicionarEndereco } from "../Controller/cliente/ControllerCliente";
 
 export function FormEndereco({idCliente, onEnderecoSalvo}){
-
-    const {state} = useLocation();
-
         const [rua, setRua] = useState();
         const [numero, setNumero] = useState();
         const [bairro, setBairro] = useState();
         const [cidade, setCidade] = useState();
         const [cep, setCep] = useState();
         const [complemento, setComplemento] = useState();
-        const [uf, setUf] = useState();
+        const [enderecoUf, setEnderecoUf] = useState();
         const [estadoSelecionado, setEstadoSelecionado] = useState();
 
 
@@ -27,17 +23,17 @@ export function FormEndereco({idCliente, onEnderecoSalvo}){
             cidade: cidade,
             cep: cep,
             complemento: complemento,
-            uf: uf,
+            enderecoUf: enderecoUf,
         }
         try{
-            console.log(enderecoRequest, state.id)
-            await adicionarEndereco(enderecoRequest, state.id);
+            await adicionarEndereco(enderecoRequest, idCliente);
             alert('Endereco salvo com sucesso');
             if(onEnderecoSalvo)
                 onEnderecoSalvo();
-            window.location.ref = '/list-cliente';
+            window.location.href = '/list-cliente';
         } catch ( error ){
             alert('Erro ao salvar cliente');
+            console.log(error);
         }
     }
 
@@ -74,8 +70,7 @@ export function FormEndereco({idCliente, onEnderecoSalvo}){
                                     options={estados}
                                     value={estadoSelecionado}
                                     onChange={(e,estados) => {
-                                        setUf(estados.value)
-                                        setEstadoSelecionado(estados.value)
+                                        setEnderecoUf(estados.value)
                                     }}
                                 />
                             </Form.Input>
@@ -135,6 +130,9 @@ export function FormEndereco({idCliente, onEnderecoSalvo}){
                             >
                             </Form.Input>
                         </Form.Group>
+                        <Button primary onClick={salvar}>
+                            Salvar Endereço
+                        </Button>
                     </Form.Field>
         
         )
