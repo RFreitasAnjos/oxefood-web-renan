@@ -54,11 +54,6 @@ export default function ListCliente () {
     }   
    }
 
-   const confirmarRemocaoEndereco = (id) => {
-        setIdRemover(id);
-        setOpenModalEndereco(true);
-   }
-
    const removerEndereco = async () => {
         try{
             const novaLista = await removerEndereco(idRemover);
