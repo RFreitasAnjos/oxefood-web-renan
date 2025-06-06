@@ -71,15 +71,9 @@ const salvar = async () => {
                     { idCliente === undefined &&
                         <h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
                     }
-
                     { idCliente != undefined &&
                         <h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
                     }
-
-                    { idCliente != undefined &&
-                        <h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Adicionar Endereço</h2>
-                    }
-
 
                     <Divider />
 

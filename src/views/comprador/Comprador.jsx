@@ -3,9 +3,9 @@ import InputMask from 'comigo-tech-react-input-mask';
 import { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
-import { FormEndereco } from '../../components/FormEndereco';
-import { salvarCliente } from '../../Controller/cliente/ControllerCliente';
-import { formatarData } from '../../utils/utils';
+import { FormEndereco } from '../../../oxefood-web-renan/src/components/FormEndereco';
+import { salvarCliente } from '../../../oxefood-web-renan/src/Controller/cliente/ControllerCliente';
+import { formatarData } from '../../../oxefood-web-renan/src/utils/utils';
 
 export default function FormCliente () {
 

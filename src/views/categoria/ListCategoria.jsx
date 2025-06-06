@@ -1,30 +1,31 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Header, Icon, Modal, Table } from "semantic-ui-react";
-import { carregarCategorias, removerCategoria, salvarCategoria } from "../../Controller/categoria/ControllerCategoria";
+import { alterarCategoria, carregarCategorias, removerCategoria, salvarCategoria } from "../../Controller/categoria/ControllerCategoria";
 import MenuSistema from "../menu/MenuSistema";
 
 export default function ListCategoria() {
     
     const { state } = useLocation();
+
     const[lista,setLista] = useState([]);
-    const[idCategoria,setIdCategoria] = useState();
-    
+    const[idCategoria,setIdCategoria] = useState(null);
+    const[descricao, setDescricao] = useState();
     const[openModal,setOpenModal] = useState(false);
 
-    const[descricao, setDescricao] = useState();
 
     useEffect(() => {
         carregarLista();
     },[]);
 
-    useEffect(() => {
+    useEffect( () => {
         if(state != null && state.id != null){
-            axios.get("http://localost:8080/api/categoriaproduto/" + state.id)
+             axios.get("http://localhost:8080/api/categoriaproduto/" + state.id)
             .then((response) => {
-                setIdCategoria(response.data.id) 
-            })
+                setIdCategoria(response.data.id);
+                setDescricao(response.data.descricao);
+            }).catch((error) => console.log(error));
         }
     }, [state])
     
@@ -43,8 +44,14 @@ export default function ListCategoria() {
             descricao: descricao
         }
         try{
-            await salvarCategoria(categoriaRequest);
-            alert('Categoria salva com sucesso');
+            let novaLista;
+            if(idCategoria)
+                novaLista =await alterarCategoria(idCategoria, categoriaRequest)
+            else
+                novaLista = await salvarCategoria(categoriaRequest);
+            setLista(novaLista);
+            setIdCategoria(null);
+            setDescricao("");
         } catch ( error ) {
             alert('Erro ao salvar categoria');
         }
@@ -53,6 +60,17 @@ export default function ListCategoria() {
     const confirmarRemocao = (id) => {
         setIdCategoria(id);
         setOpenModal(true);
+   }
+
+   const remover = async () => {
+        try{
+            const novaLista = await removerCategoria(idCategoria);
+            setLista(novaLista);
+            setOpenModal(false);
+        } catch ( error ){  
+            alert("erro ao remover categoria.", error)
+            console.log("Erro: ", error);
+        }
    }
 
 
@@ -88,10 +106,10 @@ export default function ListCategoria() {
                         labelPosition="left"
                         color="blue"
                         floated="right"
-                        onClick={() => salvar(idCategoria)}
+                        onClick={() => salvar()}
                         >
                         <Icon name='save'/>
-                        Salvar
+                            {idCategoria ? 'Atualizar' : 'Salvar'}
                     </Button>
                 </div>
 
@@ -113,6 +131,7 @@ export default function ListCategoria() {
                             <Table.Cell>{categoria.descricao}</Table.Cell>
                             <Table.Cell textAlign="center">
                                 
+                            <Link to="/list-categoria" state={{id:categoria.id}}>
                                 <Button
                                     inverted
                                     circular
@@ -120,8 +139,8 @@ export default function ListCategoria() {
                                     title='Clique aqui para editar os dados'
                                     icon>
                                         <Icon name='edit'/>
-                                </Button>
-
+                                </Button>&nbsp;
+                            </Link>
                                 <Button
                                     inverted
                                     circular
@@ -153,7 +172,7 @@ export default function ListCategoria() {
                 <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
                     <Icon name='remove' /> Não
                 </Button>
-                <Button color='green' inverted onClick={() => removerCategoria()}>
+                <Button color='green' inverted onClick={() => remover()}>
                     <Icon name='checkmark' /> Sim
                 </Button>
             </Modal.Actions>

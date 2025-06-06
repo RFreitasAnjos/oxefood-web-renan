@@ -121,8 +121,7 @@ return(
                                         icon
                                         onClick={() => mostrarEnderecos(cliente.id)}>        
                                         <Icon name="dropdown"/>        
-                                    </Button>
-                                
+                                    </Button> &nbsp;                               
                                       <Link to="/form-cliente" state={{id:cliente.id}} style={{color:'green'}}>
                                             <Button
                                             inverted

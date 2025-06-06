@@ -4,9 +4,12 @@ const API_URL = 'http://localhost:8080/api/categoriaproduto';
 
 export async function salvarCategoria(categoriaRequest){
     try{
-        axios.post(API_URL, categoriaRequest);
+        await axios.post(API_URL, categoriaRequest);
+        const response = await axios.get(API_URL);
+        return response.data;
     } catch ( error ){
-        console.error('Erro ao incluir Categoria.');
+        console.error('Erro ao incluir Categoria.', error);
+        throw error;
     }
 }
 
@@ -31,10 +34,13 @@ export async function carregarCategorias(){
     }
 }
 
-export async function alterarCategoria(idCategoria){
+export async function alterarCategoria(idCategoria, categoriaRequest){
     try{
-        axios.post(`${API_URL}/${idCategoria}`)
+        await axios.put(`${API_URL}/${idCategoria}`, categoriaRequest)
+        const response = await axios.get(API_URL);  
+        return response.data;
     } catch ( error ) {
-        console.error("Erro: ",error)
+        console.error("Erro: ",error);
+        throw error;
     }
 }
