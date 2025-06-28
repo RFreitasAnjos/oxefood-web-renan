@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Header, Icon, Modal, Table } from "semantic-ui-react";
 import { alterarCategoria, carregarCategorias, removerCategoria, salvarCategoria } from "../../Controller/categoria/ControllerCategoria";
-import MenuSistema from "../menu/MenuSistema";
+import MenuSistema from "../menu/menuSistema";
 
 export default function ListCategoria() {
     

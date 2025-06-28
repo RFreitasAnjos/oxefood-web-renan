@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
 import { carregarEntregador, removerEntregador } from '../../Controller/entregador/ControllerEntregador';
 import { formatarData } from '../../utils/utils';
-import MenuSistema from '../menu/MenuSistema';
+import MenuSistema from '../menu/menuSistema';
 
 export default function ListEntregador () {
 

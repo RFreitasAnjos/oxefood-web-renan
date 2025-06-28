@@ -4,7 +4,7 @@ import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic
 import { DetalhesEndereco } from "../../components/DetalhesEndereco";
 import { carregarClientes, removerCliente } from '../../Controller/cliente/ControllerCliente';
 import { formatarData } from "../../utils/utils";
-import MenuSistema from '../menu/MenuSistema';
+import MenuSistema from '../menu/menuSistema';
 
 export default function ListCliente () {
 

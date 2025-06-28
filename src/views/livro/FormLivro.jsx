@@ -5,71 +5,67 @@ import { useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import MenuSistema from '../menu/menuSistema';
 
-export default function FormProduto () {
+export default function FormLivro () {
 
     const {state} = useLocation();
-    const [idProduto, setIdProduto] = useState();
+    const [idLivro, setIdLivro] = useState();
 
-    const [codigo, setCodigo] = useState('');
     const [titulo, setTitulo] = useState('');
-    const [descricao,setDescricao] = useState('');
-    const [valorUnitario, setValorUnitario] = useState('');
-    const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState('');
-    const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState('');
-    const [listaCategoria, setListaCategoria] = useState([]);
-    const [idCategoria, setIdCategoria] = useState('');
+    const [autor, setAutor] = useState('');
+    const [qtdPaginas,setqtdPaginas] = useState('');
+    const [anoLancamento, setAnoLancamento] = useState('');
+    const [preco, setPreco] = useState('');
+    const [idEditora,setIdEditora] = useState('');
+    const [listaEditora, setListaEditora] = useState([]);
 
     useEffect(() => {
         if(state != null && state.id != null){
-            axios.get("http://localhost:8080/api/produto/"+ state.id)
+            axios.get("http://localhost:8080/api/editora/"+ state.id)
             .then((response) => {
-                setIdProduto(response.data.id)
-                setCodigo(response.data.codigo)
                 setTitulo(response.data.titulo)
-                setDescricao(response.data.descricao)
-                setValorUnitario(response.data.valorUnitario ? response.data.valorUnitario.toString() : '')
-                setTempoEntregaMinimo(response.data.tempoEntregaMinimo)
-                setTempoEntregaMaximo(response.data.tempoEntregaMaximo)
-                setIdCategoria(response.data.idCategoria)
+                setAutor(response.data.autor)
+                setqtdPaginas(response.data.qtdPaginas)
+                setAnoLancamento(response.data.anoLancamento)
+                setPreco(response.data.preco)
+                setIdEditora(response.data.idEditora)
             })
         }
 
-        axios.get("http://localhost:8080/api/categoriaproduto")
+        axios.get("http://localhost:8080/api/editora")
         .then((response) => {
-            const dropDownCategorias = response.data.map( c => ({ text: c.descricao, value: c.id}));
-            setListaCategoria(dropDownCategorias);
+            const dropDownEditora = response.data.map( c => ({ text: c.nome, value: c.id}));
+            setListaEditora(dropDownEditora);
         })
     },[state])
 
     function salvar() {
-        let produtoRequest ={
-            idCategoria: idCategoria,
-            codigo: codigo,
+        let livroRequest ={
+            idEditora: idEditora,
             titulo: titulo,
-            descricao: descricao,
-            valorUnitario: parseFloat(valorUnitario.replace(',','.')),
-            tempoEntregaMinimo: parseInt(tempoEntregaMinimo),
-            tempoEntregaMaximo: parseInt(tempoEntregaMaximo),
+            autor: autor,
+            preco: parseFloat(preco.replace(',','.')),
+            qtdPaginas: qtdPaginas,
+            anoLancamento: anoLancamento
         }
-        if ( idProduto != null) {
-            axios.put("http://localost:8080/api/produto/" + idProduto, produtoRequest)
+        if ( idEditora != null) {
+            axios.put("http://localost:8080/api/editora/livro/" + idEditora, livroRequest)
             .then((response) => {
-                alert('Produto Alterado com sucesso.')
-                console.log('Produto Alterado com sucesso.')
+                alert('Livro Alterado com sucesso.')
+                console.log('Livro Alterado com sucesso.')
             })
             .catch((error) => {
-                alert('Erro ao alterar um produto.') 
-                console.log('Erro ao alterar um produto.')
+                alert('Erro ao alterar um Livro.') 
+                console.log('Erro ao alterar um Livro.')
             })    
         } else {
-            axios.post("http://localhost:8080/api/produto", produtoRequest)
+            axios.post("http://localhost:8080/api/editora/livro/", livroRequest)
             .then((response) => {
-                alert(`produto ${titulo} cadastrado`)
-                console.log(`produto ${titulo} cadastrado`)
+                alert(`livro ${titulo} cadastrado`)
+                console.log(`livro ${titulo} cadastrado`)
             })
             .catch((error) =>{
-                alert(`Erro ao incluir o produto ${titulo}`)
-                console.log(`Erro ao incluir o produto ${titulo}`)
+                alert(`Erro ao incluir o livro ${titulo}`)
+                console.log(`Erro ao incluir o livro ${titulo}`)
             })
         }
     }
@@ -77,13 +73,13 @@ export default function FormProduto () {
     return (
 
 <div>
-            <MenuSistema tela={'produto'} />
+            <MenuSistema tela={'livro'} />
             <div style={{ marginTop: '3%' }}>
                 <Container textAlign='justified'>
-                    { idProduto === undefined &&
-                        <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
+                    { idLivro === undefined &&
+                        <h2> <span style={{color: 'darkgray'}}> Livro &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
                     }
-                    { idProduto != undefined &&
+                    { idLivro != undefined &&
                         <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
                     }
 
@@ -92,14 +88,6 @@ export default function FormProduto () {
                     <div style={{ marginTop: '4%' }}>
                         <Form>
                             <Form.Group widths='equal'>
-                                <Form.Input
-                                    required
-                                    fluid
-                                    label='Código do produto'
-                                    placeholder='Informe o código do produto'
-                                    value={codigo}
-                                    onChange={e => setCodigo(e.target.value)}
-                                />
                                 
                                 <Form.Input
                                     required
@@ -116,9 +104,9 @@ export default function FormProduto () {
                                 <Form.TextArea
                                     fluid
                                     label='Descrição'
-                                    placeholder='Informe a descrição do produto'
-                                    value={descricao}
-                                    onChange={e => setDescricao(e.target.value)}
+                                    placeholder='Informe ano de lancamento'
+                                    value={anoLancamento}
+                                    onChange={e => setAnoLancamento(e.target.value)}
                                 />
                             </Form.Group>
 
@@ -129,10 +117,10 @@ export default function FormProduto () {
                                     tabIndex='3'
                                     placeholder='Selecione'
                                     label='Categoria'
-                                    options={listaCategoria}
-                                    value={idCategoria}
+                                    options={listaEditora}
+                                    value={idEditora}
                                     onChange={(e,{value}) => {
-                                        setIdCategoria(value)
+                                        setIdEditora(value)
                                     }}
                                 />
                             </Form.Group>
@@ -147,28 +135,12 @@ export default function FormProduto () {
                                     <InputMask
                                         required
                                         mask="9999,99"
-                                        value={valorUnitario || ''} 
-                                        onChange={e => setValorUnitario(e.target.value)}
+                                        value={preco || ''} 
+                                        onChange={e => setPreco(e.target.value)}
                                     />
                                 </Form.Input>
 
-                                <Form.Input
-                                    fluid
-                                    label='Tempo de Entrega Mínimo (min)'
-                                    placeholder='30'
-                                    width={6}
-                                    value={tempoEntregaMinimo}
-                                    onChange={e => setTempoEntregaMinimo(e.target.value)}
-                                />
-
-                                <Form.Input
-                                    fluid
-                                    label='Tempo de Entrega Máximo (min)'
-                                    placeholder='40'
-                                    width={6}
-                                    value={tempoEntregaMaximo}
-                                    onChange={e => setTempoEntregaMaximo(e.target.value)}
-                                />
+                                
                             </Form.Group>
                         </Form>
 
@@ -180,7 +152,7 @@ export default function FormProduto () {
                                 icon
                                 labelPosition='left'
                                 color='orange'
-                                onClick={() => window.location.href = '/list-produto'}
+                                onClick={() => window.location.href = '/form-livro'}
                             >
                                 <Icon name='reply' />
                                 Listar

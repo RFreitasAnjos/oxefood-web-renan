@@ -34,7 +34,7 @@ export function formatarData(dataParam) {
     }
 
     let arrayData = dataParam.split('-');
-    return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
+    return arrayData[0];
 }
 
 export function verificaNome(nome){

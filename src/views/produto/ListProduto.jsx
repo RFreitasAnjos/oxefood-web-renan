@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
 import { carregarProduto, removerProduto } from "../../Controller/produto/ControllerProduto";
-import MenuSistema from '../menu/MenuSistema';
+import MenuSistema from '../menu/menuSistema';
 
 export default function ListProduto () {
 

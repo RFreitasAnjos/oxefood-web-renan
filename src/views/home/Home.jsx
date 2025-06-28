@@ -1,5 +1,5 @@
 import { Container, Grid, Image } from 'semantic-ui-react';
-import MenuSistema from '../menu/MenuSistema';
+import MenuSistema from '../menu/menuSistema';
 
 export default function Home () {
 
